@@ -1,0 +1,41 @@
+<template name="chatbox">
+    <div class="messageBox">
+        <div class="displayMsg" id="displayMsg" >
+            {{#each messages}}
+                {{#if myMsg}}
+                    <div class="myMsg">
+                        <div class="user">
+                            {{username}}  
+                        </div>
+                        <div class="message">
+                            <div class="option">
+                                <a class="delete">Delete</a>&nbsp;&nbsp;   
+                            </div>
+                            <span>{{message}}</span>
+                        </div>
+                    </div>  
+                {{/if}}
+                {{#if otherMsg}}
+                    <div class="otherMsg">
+                        <div class="user">
+                            {{username}}
+                        </div>
+                        <span>{{message}}</span> 
+                    </div>
+                {{/if}}
+            {{/each}}
+        </div>
+        {{#if newMsg}}
+            <div class="newMessage">
+                <a href="">New Message</a>
+            </div>
+        {{/if}}
+        
+        <form class="inputMsg">
+            <input type="text" name="message" id="msg">
+            <input type="submit" value="Send" id="chatSubmit">
+        </form>
+        
+    </div>
+    
+</template>

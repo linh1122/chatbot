@@ -1,0 +1,52 @@
+<template name="signup">
+    <div class="signUpBox">
+        <th><h2>Sign Up</h2></th>
+        <hr>
+        <form class="register">
+            <table>
+                <tr >
+                    <td>Họ Và Tên:</td>
+                    <td><input type="text" name="name"></td>
+                </tr>
+                <br>
+                <tr>
+                    <td>Giới Tính</td>
+                    <td><input type="radio" name="sex" value="Nam">Nam
+                        <input type="radio" name="sex" value="Nữ">Nữ
+                    </td>
+                </tr>
+                <br>
+                <tr>
+                    <td>Ngày Sinh:</td>
+                    <td>
+                            <input type="text" name="day" size="2" maxlength="2" placeholder="01">
+                            <input type="text" name="month" size="2" maxlength="2" placeholder="01">
+                            <input type="text" name="year" size="4" maxlength="4" placeholder="2000">
+                    </td>
+                </tr>
+                <br>
+                <tr>
+                    <td>Email:</td>
+                    <td><input type="text" name="email"></td>
+                </tr><br>
+                <tr>
+                    <td>Số Điện Thoại:</td>
+                    <td><input type="text" name="phone_number"></td>
+                </tr><br>
+                <tr>
+                    <td>Tên Đăng Nhập:</td>
+                    <td><input type="text" name="user_name"></td>
+                </tr><br>
+                <tr>
+                    <td>Mật Khẩu:</td>
+                    <td><input type="password" name="password"></td>
+                </tr><br>
+                <tr>
+                    <td>Nhập Lại Mật Khẩu:</td>
+                    <td><input type="password" name="password_retype"></td>
+                </tr>
+            </table>
+            <input type="submit" value="Đăng Ký" id="submit">
+        </form>
+    </div>
+</template>
