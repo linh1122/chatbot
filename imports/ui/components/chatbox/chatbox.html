@@ -4,22 +4,13 @@
             {{#each messages}}
                 {{#if myMsg}}
                     <div class="myMsg">
-                        <div class="user">
-                            {{username}}  
-                        </div>
                         <div class="message">
-                            <div class="option">
-                                <a class="delete">Delete</a>&nbsp;&nbsp;   
-                            </div>
                             <span>{{message}}</span>
                         </div>
                     </div>  
                 {{/if}}
-                {{#if otherMsg}}
-                    <div class="otherMsg">
-                        <div class="user">
-                            {{username}}
-                        </div>
+                {{#if botMsg}}
+                    <div class="botMsg">
                         <span>{{message}}</span> 
                     </div>
                 {{/if}}
