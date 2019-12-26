@@ -3,7 +3,9 @@
 import {
     Meteor
 } from 'meteor/meteor';
-import axios from 'axios'
+import {
+    HTTP
+} from 'meteor/http'
 
 Meteor.methods({
     'Messages.send': sendMessage
@@ -12,5 +14,5 @@ Meteor.methods({
 let base_url = 'http://192.168.100.69:6969/'
 
 function sendMessage() {
-    return axios.get(base_url)
+    return HTTP.call('GET', base_url, {});
 }

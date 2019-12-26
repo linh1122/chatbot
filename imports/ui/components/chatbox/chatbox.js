@@ -4,37 +4,16 @@ import {
 } from 'meteor/meteor';
 import {
   Messages
-} from '/imports/api/links/links.js';
+} from '/imports/api/meteorServer/message';
 import {
   Session
 } from 'meteor/session';
 
 
 Template.chatbox.onCreated(function () {
-  Meteor.subscribe('Messages');
-  Meteor.subscribe('userData');
+  Meteor.subscribe('Messages.byUser', Meteor.userId());
   var count = 0;
-  let userID = Meteor.userId()
-  Messages.find({
-    $or: [{
-      sendBy: userID
-    }, {
-      receiveBy: userID
-    }]
-  }, {
-    sort: {
-      createdAt: 1
-    },
-    fields: {
-      message: 1,
-      sendBy: 1,
-      createdAt: 1
-    }
-  }, function (err, result) {
-    count++;
-    Session.set('mesTime', this.createdAt);
-    console.log(Session.get('mesTime'));
-  })
+
   Session.set('loadMes', count - 20);
   Session.set('scrollBottom', true);
 })
@@ -42,64 +21,19 @@ Template.chatbox.onCreated(function () {
 Template.chatbox.helpers({
 
   messages: function () {
-    var loadMes = Session.get('loadMes');
-    let userID = Meteor.userId()
-    return Messages.find({
-      $or: [{
-        sendBy: userID
-      }, {
-        receiveBy: userID
-      }]
-    }, {
-      sort: {
-        createdAt: 1
-      },
-      skip: loadMes,
-      fields: {
-        message: 1,
-        sendBy: 1,
-        createdAt: 1,
-        receiveBy: 1
-      }
-    }, function () {});
+    return Messages.find({});
   },
 
   myMsg: function () {
-    if (this.sendBy == Meteor.userId()) {
-      if (Session.get('scrollBottom')) {
-        if ($(".displayMsg")[0]) {
-          $(".displayMsg").stop().animate({
-            scrollTop: $(".displayMsg")[0].scrollHeight
-          }, 1000);
-        }
-        Session.set('scrollBottom', false);
-      } else if (!Session.get('scrollBottom')) {
-        $(".displayMsg").scrollTop(32 * 28);
-      }
-      return true;
-    } else {
-      return false;
-    }
+    return this.sendBy
   },
 
   botMsg: function () {
-    if (this.receiveBy) {
-      if (!Session.get('scrollBottom') && this.createdAt > Session.get('mesTime')) {
-        Session.set('newMes', true);
-        Session.set('mesTime', this.createdAt);
-      } else {
-        Session.set('newMes', false);
-      }
-      return true;
-    } else {
-      return false;
-    }
+    return this.sendTo
   },
 
   username: function () {
-    return Meteor.users.findOne({
-      _id: this.sendBy
-    }).username;
+    return Meteor.user().username;
   }
 });
 
@@ -122,19 +56,6 @@ Template.chatbox.events({
         }
       })
     }
-  },
-
-  'click .delete'(event) {
-    event.preventDefault();
-    Meteor.call('Deleted_Msgs.insert', this.message, this.sendBy, this.createdAt, Accounts.userId(), (err) => {
-      if (err) throw err;
-      else {
-        Meteor.call('Messages.delete', this._id, err => {
-          if (err) throw err;
-          else {}
-        })
-      }
-    })
   },
 
   'mousewheel': function (event, template) {
