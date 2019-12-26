@@ -1,3 +1,20 @@
 <template name="App_logedin">
-    {{> logedin}}
+    <div class="navbars">
+        <div class="left">
+            <a href="">MapMessage</a>
+        </div>
+        <div class="right">
+            <div class="displayUserName">
+                {{#each names}}
+                <span>{{profile.name}}</span>
+                {{/each}}
+            </div>
+            <div class="button logOutButton"><a href="">Log Out</a></div>
+        </div>
+    </div>
+    <div class="messageIcon">
+        <div class="msgIcon">
+            <a href=""><img src="/img/messenger.png" alt=""></a>
+        </div>
+    </div>
 </template>
