@@ -11,6 +11,8 @@ if (Meteor.isServer) {
     Meteor.methods({
         'Messages.create': createMessage,
         'Messages.send': userSendFirstMessage,
+        'Messages.comment': userComment,
+        'Messages.booking': userBooking,
     });
 
     Meteor.publish(
@@ -71,4 +73,18 @@ function userSendFirstMessage(content, sendBy, sendTo) {
     }).catch(error => {
         console.log(error)
     })
+}
+
+function userComment(messages, userID) {
+    return createMessage(messages, userID, null).then(result => {
+        return createMessage(`Chúng tôi đã ghi nhận ý kiến, mong quý khách tiếp tục cống tiền cho chúng tôi`, null, userID)
+    })
+
+}
+
+function userBooking(messages, userID) {
+    return createMessage(messages, userID, null).then(result => {
+        return createMessage(`Chúng tôi đã đặt chuyến đi cho quý khách`, null, userID)
+    })
+
 }

@@ -50,21 +50,53 @@ Template.chatbox.events({
     if (content) {
       const sendBy = Meteor.userId();
       if (content.value != "") {
-        if (Session.set('loadMes') == 0) {
+        if (Session.get('messageType') == 0) {
           Meteor.call('Messages.send', content, sendBy, null, err => {
             if (err) throw err;
             $('#msg').val('')
           })
-        } else if (Session.set('loadMes') == 1) {
-
-        } else if (Session.set('loadMes') == 2) {
-
-        } else if (Session.set('loadMes') == 3) {
-
-        } else if (Session.set('loadMes') == 4) {
-
-        } else if (Session.set('loadMes') == 5) {
-
+        } else if (Session.get('messageType') == 1) {
+          Meteor.call('Messages.comment', content, sendBy, null, err => {
+            if (err) throw err;
+            $('#msg').val('')
+            Session.set('messageType', 0);
+          })
+        } else if (Session.get('messageType') == 2) {
+          Meteor.call('Messages.create', content, sendBy, null, err => {
+            if (err) throw err;
+            Meteor.call('Messages.create', `Qúy khách vui lòng nhập điểm trả`, null, sendBy, err => {
+              if (err) throw err;
+              $('#msg').val('')
+              Session.set('messageType', 3);
+              Session.set('bookingPicupAddress', content);
+            })
+          })
+        } else if (Session.get('messageType') == 3) {
+          Meteor.call('Messages.create', content, sendBy, null, err => {
+            if (err) throw err;
+            Meteor.call('Messages.create', `Qúy khách vui lòng nhập số ghế`, null, sendBy, err => {
+              if (err) throw err;
+              $('#msg').val('')
+              Session.set('messageType', 4);
+              Session.set('bookingTakeoffAddress', content);
+            })
+          })
+        } else if (Session.get('messageType') == 4) {
+          Meteor.call('Messages.create', content, sendBy, null, err => {
+            if (err) throw err;
+            Meteor.call('Messages.create', `Qúy khách vui lòng nhập thời gian`, null, sendBy, err => {
+              if (err) throw err;
+              $('#msg').val('')
+              Session.set('messageType', 5);
+              Session.set('bookingSeats', content);
+            })
+          })
+        } else if (Session.get('messageType') == 5) {
+          Session.set('bookingTime', content);
+          Meteor.call('Messages.booking', content, sendBy, null, err => {
+            if (err) throw err;
+            Session.set('messageType', 0);
+          })
         }
       }
     } else alert('Điền gì vào nhá.')
