@@ -10,7 +10,7 @@ export const Messages = new Mongo.Collection('messages')
 if (Meteor.isServer) {
     Meteor.methods({
         'Messages.create': createMessage,
-        'Messages.send': userSendFirstMessage
+        'Messages.send': userSendFirstMessage,
     });
 
     Meteor.publish(
@@ -56,8 +56,16 @@ function createMessage(content, sendBy, sendTo) {
 
 function userSendFirstMessage(content, sendBy, sendTo) {
     return createMessage(content, sendBy, sendTo).then(result => {
-        if (content)
-            return createMessage(`<div>Xin chào quý khách</div>`, null, sendBy)
+        if (content) {
+            let welcomeMessage = `
+                            <div class="bg-secondary">Xin chào quý khách
+                                Đây là chế độ trả lời tự động!
+                                Quý khách vui lòng chọn dịch vụ
+                                <button class="btn btn-primary comment">Viết nhận xét</button>
+                                <button class="btn btn-primary booking">Đặt chuyến đi</button>
+                            </div>`
+            return createMessage(welcomeMessage, null, sendBy)
+        }
     }).then(result => {
         return result
     }).catch(error => {
