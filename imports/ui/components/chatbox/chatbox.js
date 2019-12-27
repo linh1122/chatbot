@@ -96,6 +96,7 @@ Template.chatbox.events({
           Meteor.call('Messages.booking', content, sendBy, null, err => {
             if (err) throw err;
             Session.set('messageType', 0);
+            $('#msg').val('')
           })
         }
       }
