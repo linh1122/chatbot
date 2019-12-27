@@ -8,11 +8,11 @@ import {
 } from 'meteor/http'
 
 Meteor.methods({
-    'Messages.send': sendMessage
+    'Python.getBookingData': getBookingData
 });
 
 let base_url = 'http://192.168.100.69:6969/'
 
-function sendMessage() {
+function getBookingData() {
     return HTTP.call('GET', base_url, {});
 }

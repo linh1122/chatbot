@@ -5,13 +5,13 @@
                 {{#if myMsg}}
                     <div class="myMsg">
                         <div class="message">
-                            <span>{{content}}</span>
+                            <span>{{{content}}}</span>
                         </div>
                     </div>  
                 {{/if}}
                 {{#if botMsg}}
                     <div class="botMsg">
-                        <span>{{content}}</span> 
+                        {{{content}}}
                     </div>
                 {{/if}}
             {{/each}}
@@ -22,10 +22,10 @@
             </div>
         {{/if}}
         
-        <form class="inputMsg">
+        <div class="inputMsg">
             <input type="text" name="message" id="msg">
             <input type="submit" value="Send" id="chatSubmit">
-        </form>
+        </div>
         
     </div>
     

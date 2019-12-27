@@ -38,24 +38,18 @@ Template.chatbox.helpers({
 });
 
 Template.chatbox.events({
-  'submit .inputMsg'(event) {
-    event.preventDefault();
-    if ($(".displayMsg")[0]) {
-      $(".displayMsg").stop().animate({
-        scrollTop: $(".displayMsg")[0].scrollHeight
-      }, 1000);
+  'click #chatSubmit'(event) {
+    const content = $('#msg').val();
+    if(content){
+      const sendBy = Meteor.userId();
+      if (content.value != "") {
+        Meteor.call('Messages.send', content, sendBy, null, err => {
+          if (err) throw err;
+          $('#msg').val('')
+        })
+      }
     }
-    const target = event.target;
-    const message = target.message;
-    const sendBy = Accounts.userId();
-    if (message.value != "") {
-      Meteor.call('Messages.insert', message.value, sendBy, err => {
-        if (err) throw err;
-        else {
-          message.value = '';
-        }
-      })
-    }
+    else alert('Điền gì vào nhá.')
   },
 
   'mousewheel': function (event, template) {
