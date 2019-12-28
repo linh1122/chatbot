@@ -63,8 +63,14 @@ function userSendFirstMessage(content, sendBy, sendTo) {
                             <div class="bg-secondary">Xin chào quý khách
                                 Đây là chế độ trả lời tự động!
                                 Quý khách vui lòng chọn dịch vụ
-                                <button class="btn btn-primary comment">Viết nhận xét</button>
-                                <button class="btn btn-primary booking">Đặt chuyến đi</button>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button class="btn btn-primary comment">Viết nhận xét</button>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-primary booking">Đặt chuyến đi</button>
+                                    </div>
+                                </div>
                             </div>`
             return createMessage(welcomeMessage, null, sendBy)
         }
@@ -92,16 +98,14 @@ function userComment(messages, userID) {
 }
 
 function userBooking(data, userID) {
-    return createMessage(messages, userID, null).then(result => {
+    return createMessage(data.seats, userID, null).then(result => {
         Meteor.call('Python.getData', {
             status: 0,
             data
         }, (err, result) => {
             if (err) throw err
             console.log(result.data)
-            return createMessage(`Đã đặt xe!`, null, userID)
+            return createMessage(`Chúng tôi đã đặt cho quý khách ${result.data.seats} chỗ ngồi trên chuyến đi từ ${result.data.pickupAddress} đến ${result.data.takeoffAddress} vào lúc ${new Date(result.data.startTime).toLocaleString()}! Chúc quý khách có một chuyến đi vui vẻ!`, null, userID)
         })
-        return createMessage(`Chúng tôi đã đặt chuyến đi cho quý khách`, null, userID)
     })
-
 }

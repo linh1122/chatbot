@@ -14,21 +14,26 @@ import {
 //1 - viết nhận xét
 //2 - điền điểm đón
 //3 - chọn điểm trả
-//4 - chọn thời gian
+//4 - chọn thời ngày
+//5 - chọn số giờ
 //5 - chọn số ghế
 
 Template.chatbox.onCreated(function () {
   Meteor.subscribe('Messages.byUser', Meteor.userId());
-  var count = 0;
   Session.set('messageType', 0);
-  Session.set('loadMes', count - 20);
+  Session.set('limitMesage', 15);
   Session.set('scrollBottom', true);
 })
 
 Template.chatbox.helpers({
 
   messages: function () {
-    return Messages.find({});
+    return Messages.find({}, {
+      sort: {
+        createdAt: -1
+      },
+      limit: Session.get('limitMesage')
+    }).map(item=>item).reverse();
   },
 
   myMsg: function () {
@@ -53,49 +58,72 @@ Template.chatbox.events({
         if (Session.get('messageType') == 0) {
           Meteor.call('Messages.send', content, sendBy, null, err => {
             if (err) throw err;
+            $('#displayMsg').animate({ scrollTop: 100000 }, 1000)
             $('#msg').val('')
           })
         } else if (Session.get('messageType') == 1) {
           Meteor.call('Messages.comment', content, sendBy, null, err => {
             if (err) throw err;
             $('#msg').val('')
+            $('#displayMsg').animate({ scrollTop: 100000 }, 1000)
             Session.set('messageType', 0);
           })
         } else if (Session.get('messageType') == 2) {
           Meteor.call('Messages.create', content, sendBy, null, err => {
             if (err) throw err;
-            Meteor.call('Messages.create', `Qúy khách vui lòng nhập điểm trả`, null, sendBy, err => {
+            Meteor.call('Messages.create', `Quý khách vui lòng nhập điểm trả`, null, sendBy, err => {
               if (err) throw err;
               $('#msg').val('')
+              $('#displayMsg').animate({ scrollTop: 100000 }, 1000)
               Session.set('messageType', 3);
-              Session.set('bookingPicupAddress', content);
+              Session.set('pickupAddress', content);
             })
           })
         } else if (Session.get('messageType') == 3) {
           Meteor.call('Messages.create', content, sendBy, null, err => {
             if (err) throw err;
-            Meteor.call('Messages.create', `Qúy khách vui lòng nhập số ghế`, null, sendBy, err => {
+            Meteor.call('Messages.create', `Quý khách vui lòng nhập số ngày`, null, sendBy, err => {
               if (err) throw err;
               $('#msg').val('')
+              $('#displayMsg').animate({ scrollTop: 100000 }, 1000)
               Session.set('messageType', 4);
-              Session.set('bookingTakeoffAddress', content);
+              Session.set('takeoffAddress', content);
             })
           })
         } else if (Session.get('messageType') == 4) {
           Meteor.call('Messages.create', content, sendBy, null, err => {
             if (err) throw err;
-            Meteor.call('Messages.create', `Qúy khách vui lòng nhập thời gian`, null, sendBy, err => {
+            Meteor.call('Messages.create', `Quý khách vui lòng nhập thời gian`, null, sendBy, err => {
               if (err) throw err;
               $('#msg').val('')
+              $('#displayMsg').animate({ scrollTop: 100000 }, 1000)
+              Session.set('date', content);
               Session.set('messageType', 5);
-              Session.set('bookingSeats', content);
             })
           })
         } else if (Session.get('messageType') == 5) {
-          Session.set('bookingTime', content);
-          Meteor.call('Messages.booking', content, sendBy, null, err => {
+          Meteor.call('Messages.create', content, sendBy, null, err => {
+            if (err) throw err;
+            Meteor.call('Messages.create', `Quý khách vui lòng nhập số ghế`, null, sendBy, err => {
+              if (err) throw err;
+              $('#msg').val('')
+              $('#displayMsg').animate({ scrollTop: 100000 }, 1000)
+              Session.set('time', content);
+              Session.set('messageType', 6);
+            })
+          })
+        } else if (Session.get('messageType') == 6) {
+          Session.set('seats', content);
+          Meteor.call('Messages.booking', {
+            pickupAddress: Session.get('pickupAddress'),
+            takeoffAddress: Session.get('takeoffAddress'),
+            date: Session.get('date'),
+            time: Session.get('time'),
+            seats: Session.get('seats')
+          }, sendBy, err => {
             if (err) throw err;
             Session.set('messageType', 0);
+            $('#displayMsg').animate({ scrollTop: 100000 }, 1000)
             $('#msg').val('')
           })
         }
@@ -108,6 +136,7 @@ Template.chatbox.events({
     Meteor.call('Messages.create', 'Vui lòng viết comment', null, Meteor.userId(), err => {
       if (err) throw err;
       Session.set('messageType', 1);
+      $('#displayMsg').animate({ scrollTop: 100000 }, 1000)
     })
 
   },
@@ -116,13 +145,14 @@ Template.chatbox.events({
     Meteor.call('Messages.create', `Vui lòng chọn điểm đón`, null, Meteor.userId(), err => {
       if (err) throw err;
       Session.set('messageType', 2);
+      $('#displayMsg').animate({ scrollTop: 100000 }, 1000)
     })
   },
 
   'mousewheel': function (event, template) {
     if ($('.displayMsg').scrollTop() == 0) {
-      var loadMsg = Session.get('loadMes') - 15;
-      Session.set('loadMes', loadMsg);
+      var loadMsg = Number(Session.get('limitMesage')) + 15;
+      Session.set('limitMesage', loadMsg);
       Session.set('scrollTop', true);
     } else {
       Session.set('scrollTop', false);
