@@ -58,7 +58,7 @@ Template.chatbox.helpers({
 Template.chatbox.events({
   'keypress #msg'(event) {
     if (event.which == 13)
-      sendMessage
+      sendMessage()
   },
   'click #chatSubmit': sendMessage,
 
