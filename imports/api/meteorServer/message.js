@@ -77,13 +77,30 @@ function userSendFirstMessage(content, sendBy, sendTo) {
 
 function userComment(messages, userID) {
     return createMessage(messages, userID, null).then(result => {
-        return createMessage(`Chúng tôi đã ghi nhận ý kiến, mong quý khách tiếp tục cống tiền cho chúng tôi`, null, userID)
+        Meteor.call('Python.getData', {
+            status: 1,
+            data: messages
+        }, (err, result) => {
+            if (err) throw err
+            console.log(result.data)
+            if (result.data.negative > result.data.positive)
+                return createMessage(`Chúng tôi xin lỗi vì sự bất tiện, mong quý khách thông cảm và tiếp tục sử dụng dịch vụ!`, null, userID)
+            else return createMessage(`Cám ơn quý khách đã đóng góp ý kiến, chúng tôi rất hân hạnh được phục vụ quý khách!`, null, userID)
+        })
     })
 
 }
 
-function userBooking(messages, userID) {
+function userBooking(data, userID) {
     return createMessage(messages, userID, null).then(result => {
+        Meteor.call('Python.getData', {
+            status: 0,
+            data
+        }, (err, result) => {
+            if (err) throw err
+            console.log(result.data)
+            return createMessage(`Đã đặt xe!`, null, userID)
+        })
         return createMessage(`Chúng tôi đã đặt chuyến đi cho quý khách`, null, userID)
     })
 

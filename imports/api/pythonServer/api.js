@@ -8,11 +8,21 @@ import {
 } from 'meteor/http'
 
 Meteor.methods({
-    'Python.getBookingData': getBookingData
+    'Python.getBookingData': getBookingData,
+    'Python.getData': getData
 });
 
-let base_url = 'http://192.168.100.69:6969/'
+let base_url = 'http://192.168.100.69:6969'
 
 function getBookingData() {
     return HTTP.call('GET', base_url, {});
+}
+
+
+function getData(data) {
+    let url = `${base_url}/api/v1/p1`
+    console.log(data, url)
+    return HTTP.call('POST', url, {
+        data
+    });
 }
