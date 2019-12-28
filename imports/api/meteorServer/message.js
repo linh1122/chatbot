@@ -99,17 +99,16 @@ function userComment(messages, userID) {
 
 function userBooking(data, userID) {
     return createMessage(data.seats, userID, null).then(result => {
-        return Meteor.call('Python.getData', {
+        Meteor.call('Python.getData', {
             status: 0,
             data
-        }).then(result => {
+        }, (error, result) => {
+            if (error)
+                return createMessage(`Có lỗi xảy ra, vui lòng đặt lại!`, null, userID)
             console.log(result.data)
-            if(result.data)
-            return createMessage(`Chúng tôi đã đặt cho quý khách ${result.data.seats} chỗ ngồi trên chuyến đi từ ${result.data.pickupAddress} đến ${result.data.takeoffAddress} vào lúc ${new Date(result.data.startTime).toLocaleString()}! Chúc quý khách có một chuyến đi vui vẻ!`, null, userID)
+            if (result.data)
+                return createMessage(`Chúng tôi đã đặt cho quý khách ${result.data.seats} chỗ ngồi trên chuyến đi từ ${result.data.pickupAddress} đến ${result.data.takeoffAddress} vào lúc ${new Date(result.data.startTime).toLocaleString()}! Chúc quý khách có một chuyến đi vui vẻ!`, null, userID)
             else return createMessage(`Có lỗi xảy ra, vui lòng đặt lại!`, null, userID)
-        }).catch(error=>{
-            console.log(error)
-            return createMessage(`Có lỗi xảy ra, vui lòng đặt lại!`, null, userID)
         })
     })
 }
