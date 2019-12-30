@@ -5,13 +5,16 @@
                 {{#if myMsg}}
                     <div class="myMsg">
                         <div class="message">
-                            <span>{{{content}}}</span>
-                        </div>
-                    </div>  
+                        <span>{{{content}}}</span>
+                    </div>
+                </div>  
                 {{/if}}
                 {{#if botMsg}}
-                    <div class="botMsg">
-                        {{{content}}}
+                <div class="botMsg">
+                <div class="message">
+                                {{{content}}}
+
+                            </div>
                     </div>
                 {{/if}}
             {{/each}}
