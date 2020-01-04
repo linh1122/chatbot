@@ -12,7 +12,7 @@ Meteor.methods({
     'Python.getData': getData
 });
 
-let base_url = 'http://192.168.100.69:6969'
+let base_url = 'http://14.231.140.53:6969'
 
 function getBookingData() {
     return HTTP.call('GET', base_url, {});
